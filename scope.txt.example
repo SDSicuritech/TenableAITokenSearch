@@ -1,0 +1,5 @@
+# Authorized in-scope hosts — one per line.
+# A target is in scope if its host equals or is a subdomain of a line below.
+# Lines starting with # and blank lines are ignored.
+app.example.com
+example.com
