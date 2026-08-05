@@ -14,6 +14,27 @@ OpenAI, Anthropic Claude, Google/Gemini, Hugging Face, AWS access key IDs,
 Stripe live keys, GitHub tokens, Slack bot tokens, JWTs, and generic
 `api_key = "..."` assignments.
 
+## Install as a Claude Code skill
+
+Copy `SKILL.md` into your Claude Code skills directory, then restart Claude Code
+so it picks up the new skill:
+
+```bash
+mkdir -p ~/.claude/skills/ai-secret-scanner
+cp SKILL.md ~/.claude/skills/ai-secret-scanner/
+```
+
+On Windows (PowerShell):
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\ai-secret-scanner"
+Copy-Item SKILL.md "$env:USERPROFILE\.claude\skills\ai-secret-scanner\"
+```
+
+Invoke it with `/ai-secret-scanner`. The skill shells out to
+`ai_secret_scanner.py`, so keep this repo checked out and install the Python
+dependencies below.
+
 ## Quick start
 
 ```bash
