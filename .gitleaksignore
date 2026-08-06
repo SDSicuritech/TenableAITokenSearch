@@ -1,0 +1,15 @@
+# Synthetic test fixtures — not credentials.
+#
+# Both entries are the same line: a sequential dummy Google API key
+# ("AIza" + "SyA" + digits + the alphabet) used in test_detects_common_key_types()
+# to prove the scanner recognises the Gemini/Google key shape. A secret scanner's
+# own test suite necessarily contains secret-shaped strings; gitleaks flags this
+# one on entropy alone, regardless of whether the value is real. It has never
+# been a live credential and grants access to nothing.
+#
+# The fixtures are now assembled from fragments at runtime, so the working tree
+# scans clean on its own. These two entries cover the historical commits that
+# still contain the literal, which cannot be changed without rewriting published
+# history.
+a4d0f47256fdbf7e9e4005af5aadd5214e0a9fb2:test_ai_secret_scanner.py:gcp-api-key:15
+97c38ead2090780719cd4a535a60e1c5dfba705d:test_ai_secret_scanner.py:gcp-api-key:15

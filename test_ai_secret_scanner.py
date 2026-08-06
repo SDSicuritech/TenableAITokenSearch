@@ -3,16 +3,32 @@
 These tests use no network. They verify detection, redaction, fingerprint
 stability, and scope gating — the properties that make this skill safe to
 publish.
+
+The credential fixtures below are assembled from fragments at import time
+rather than written as literals. They have always been synthetic throwaway
+values, but a secret scanner's own test suite is inherently full of
+secret-shaped strings, and as literals they trip repository secret scanners
+(gitleaks flags the Gemini shape on entropy alone, regardless of whether the
+value is real). Assembling them keeps automated scans clean without changing
+what these tests actually exercise.
 """
 
 import ai_secret_scanner as scanner
 
+# Synthetic, non-functional credentials. Split so that no secret-shaped literal
+# appears anywhere in this file — see the module docstring.
+DUMMY_AWS_KEY = "AKIA" + "IOSFODNN7" + "EXAMPLE"
+DUMMY_ANTHROPIC_KEY = (
+    "sk-ant-" + "api03-" + "abcdefghijklmnopqrstuvwxyz" + "0123456789ABCD"
+)
+DUMMY_GEMINI_KEY = "AIza" + "SyA" + "1234567890" + "abcdefghijklmnopqrstuv"
+
 
 def test_detects_common_key_types():
-    sample = """
-    const cfg = { api_key: "AKIAIOSFODNN7EXAMPLE" };
-    var claude = "sk-ant-api03-abcdefghijklmnopqrstuvwxyz0123456789ABCD";
-    let g = "AIzaSyA1234567890abcdefghijklmnopqrstuv";
+    sample = f"""
+    const cfg = {{ api_key: "{DUMMY_AWS_KEY}" }};
+    var claude = "{DUMMY_ANTHROPIC_KEY}";
+    let g = "{DUMMY_GEMINI_KEY}";
     """
     findings = scanner.scan_text_for_keys(sample, "https://app.example.com", "src.js")
     types = {f["Key Type"] for f in findings}
@@ -22,7 +38,7 @@ def test_detects_common_key_types():
 
 
 def test_findings_never_contain_full_plaintext_secret():
-    secret = "sk-ant-api03-abcdefghijklmnopqrstuvwxyz0123456789ABCD"
+    secret = DUMMY_ANTHROPIC_KEY
     findings = scanner.scan_text_for_keys(secret, "https://app.example.com", "src.js")
     assert findings, "expected at least one finding"
     for f in findings:
@@ -32,7 +48,7 @@ def test_findings_never_contain_full_plaintext_secret():
 
 
 def test_mask_and_fingerprint():
-    s = "AKIAIOSFODNN7EXAMPLE"
+    s = DUMMY_AWS_KEY
     masked = scanner.mask_secret(s)
     assert s not in masked and "*" in masked
     # fingerprint is stable and truncated
