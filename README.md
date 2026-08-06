@@ -50,5 +50,11 @@ python3 ai_secret_scanner.py --input applications.xlsx --scope scope.txt --outpu
 This tool is for assessing assets you own or have written permission to test.
 It refuses to run without a scope allowlist and skips any target outside it.
 
+## Authors
+
+- Sapan Dhora ([@SDSicuritech](https://github.com/SDSicuritech))
+- Rajesh Guttikonda
+- Madhusudahan Mergu
+
 See `SKILL.md` for the full skill definition, safety properties, and
 limitations. Licensed under MIT.
